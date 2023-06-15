@@ -2,7 +2,7 @@
 " <ESC> - escape, <BS> - backspace, <CR> - return
 
 " leader
-let mapleader = ","
+let mapleader = " "
 set easymotion
 set NERDTree
 set highlightedyank
@@ -10,10 +10,15 @@ set highlightedyank
 set surround
 " 启用multi cursor
 set multiple-cursors
+" enable which-key
+set which-key
+" notimeout
+set notimeout
+" 设置当前行下划线
+set cursorline
 " 显示行号
 set nu
-" 显示相对行号
-set rnu
+" 显示相对行 set rnu
 " 高亮搜索
 set hlsearch
 " 自动定位到输入中的字符串，不需要回车搜索
@@ -26,54 +31,23 @@ set clipboard+=ideaput
 " 搜索时智能匹配大小写
 set ignorecase smartcase
 " 复制后高亮的实效时间
-let g:highlightedyank_highlight_duration = "1000"
+let g:highlightedyank_highlight_duration = "50"
 " 复制后高亮的颜色
 let g:highlightedyank_highlight_color = "rgba(160, 160, 160, 155)"
 " Insert
-inoremap jk <Esc>
+inoremap jj <Esc>
 " Normal
 nnoremap dd ddzz
 " Visual
 vnoremap d dzz
 
-" Normal + Visual
-noremap # #zz
-noremap * *zz
-" noremap w wzz
-" noremap W Wzz
-noremap e ezz
-noremap E Ezz
-noremap b bzz
-noremap B Bzz
-noremap H Hzz
-noremap L Lzz
-noremap 0 0zz
-noremap $ $zz
-noremap ^ ^zz
-noremap j jzz
-noremap k kzz
-noremap G Gzz
-noremap u uzz
-noremap ( (zz
-noremap ) )zz
-noremap { {zz
-noremap } }zz
-noremap [{ [{zz
-noremap ]} ]}zz
-noremap gd gdzz
-noremap <C-O> <ESC>:action Back<CR>
-noremap <C-I> <ESC>:action Forward<CR>
-noremap <C-D> <C-D>zz
-noremap <C-U> <C-U>zz
-noremap <C-H> <C-W><C-H>zz
-noremap <C-L> <C-W><C-L>zz
-noremap <C-K> <C-W><C-K>zz
-noremap <C-J> <C-W><C-J>zz
+noremap s ""
 " E和R是为了保持与Chrome中的SurfingKeys的键位一致
 noremap E gT
 " noremap R gt
 noremap J <ESC>:action EditorJoinLines<CR>
-
+""" Tool windows
+nnoremap <c-t> :action ActivateTerminalToolWindow<CR>
 " 个人习惯
 noremap <leader>` <ESC>:action SelectInProjectView<CR>
 
@@ -93,7 +67,7 @@ noremap <leader>r <ESC>:action Run<CR>
 " usage
 noremap <leader>u <ESC>:action ShowUsages<CR>
 " import
-noremap <leader>i <ESC>:action Maven.Reimport<CR>
+" noremap <leader>i <ESC>:action Maven.Reimport<CR>
 " open file path
 noremap <leader>o <ESC>:action ShowFilePath<CR>
 " show projects
@@ -111,16 +85,27 @@ noremap <leader>d <ESC>:action DebugClass<CR>
 noremap <leader>g <ESC>:action Generate<CR>
 " hide all
 noremap <leader>h <ESC>:action HideAllWindows<CR>
+noremap <leader>th <ESC>:action TypeHierarchy<CR>
 " jump to next error
 noremap <leader>j <ESC>:action GotoNextError<CR>
 " jump to previous error，就近原则
 noremap <leader>k <ESC>:action GotoPreviousError<CR>
 " light up
 noremap <leader>l <ESC>:action HighlightUsagesInFile<CR>
-" rename element
-" noremap <leader>rn <ESC>:action RenameElement<CR>
 " 粘贴最近复制寄存器
 noremap <leader>; "0p
+
+" 重构相关
+" rename element - change name
+noremap <leader>cn <ESC>:action RenameElement<CR>
+nnoremap <Leader>cm :action ImplementMethods<CR>
+nnoremap <Leader>cv :action IntroduceVariable<CR>
+nnoremap <Leader>em :action ExtractMethod<CR>
+nnoremap <Leader>cw :action SurroundWith<CR>
+nnoremap <Leader>cc :action CommentByLineComment<CR>
+vnoremap <Leader>cc :action CommentByBlockComment<CR>
+vnoremap <Leader>em :action ExtractMethod<CR>
+vnoremap <Leader>cw :action SurroundWith<CR>
 
 " 本行皆为debug所用
 " resume - z
@@ -128,13 +113,14 @@ noremap <leader>z <ESC>:action Resume<CR>
 " step over
 noremap <leader>x <ESC>:action StepOver<CR>
 " step into
-noremap <leader>c <ESC>:action SmartStepInto<CR>
+noremap <leader>i <ESC>:action SmartStepInto<CR>
 " evaluate expression - v
 noremap <leader>v <ESC>:action EvaluateExpression<CR>
 " breakpoints
 noremap <leader>b <ESC>:action ViewBreakpoints<CR>
 " 因为属于breakpoint范畴的功能, 所以就选择了b和m的隔壁
 noremap <leader>n <ESC>:action ToggleLineBreakpoint<CR>
+nnoremap <leader>t :action ActivateRunToolWindow<CR>
 " mute breakpoints
 noremap <leader>m <ESC>:action XDebugger.MuteBreakpoints<CR>
 
@@ -171,6 +157,9 @@ noremap gts <ESC>:action GotoSuperMethod<CR>
 noremap gtd <ESC>:action GotoDeclaration<CR>
 " goto file
 noremap gtf <ESC>:action GotoFile<CR>
+nnoremap gt :action GotoTest<CR>
+nnoremap gb :action Back<CR>
+nnoremap gf :action Forward<CR>
 " g
 "noremap gg <ESC>:action MUST_NOT_BE_CHANGED!!!<CR>
 " hierarchy
@@ -187,19 +176,17 @@ noremap gk <ESC>:action SliceForward<CR>
 " z
 "noremap gz <ESC>:action <CR>
 " close all but this
-noremap gx <ESC>:action CloseAllEditorsButActive<CR>
+" noremap gx <ESC>:action CloseAllEditorsButActive<CR>
 " compile
-noremap gc <ESC>:action CompileDirty<CR>
+" noremap gc <ESC>:action CompileDirty<CR>
 " v
 "noremap gv <ESC>:action <CR>
 " b
-noremap gb <ESC>:action FindBugs.CurrentFileAction<CR>
+" noremap gb <ESC>:action FindBugs.CurrentFileAction<CR>
 " goto class
 noremap gn <ESC>:action GotoClass<CR>
 " goto method
 noremap gm <ESC>:action GotoSymbol<CR>
-
-" git操作
 
 " NERDTree
 noremap <leader>nt <ESC>:NERDTree<CR>
@@ -208,22 +195,17 @@ noremap <leader>nt <ESC>:NERDTree<CR>
 " \ also works
 "noremap \q <ESC>:action <CR>
 " refresh
-noremap \r <ESC>:source ~/.ideavimrc<CR>
 " uml popup
 noremap \u <ESC>:action ShowUmlDiagramPopup<CR>
-" git flow
-noremap \[ <ESC>:action Gitflow.OpenGitflowPopup<CR>
-" Vcs
-noremap \] <ESC>:action Vcs.QuickListPopupAction<CR>
 
 " global find
 noremap g/ <ESC>:action FindInPath<CR>
 " gloaal replace
 noremap g' <ESC>:action ReplaceInPath<CR>
 " find
-noremap / <ESC>:action Find<CR>
+" noremap / <ESC>:action Find<CR>
 " replace
-noremap ' <ESC>:action Replace<CR>
+" noremap ' <ESC>:action Replace<CR>
 " previous method
 noremap [[ <ESC>:action MethodUp<CR>
 " next method
@@ -236,7 +218,7 @@ nnoremap zO :action ExpandRegionRecursively<CR>
 """  from k-vim ""
 " 切换前后buffer
 nnoremap [b :bprevious<cr>
-nnoremap ]b :bnext<cr>
+nnoremap ]b  :bnext<cr>
 " 使用方向键切换buffer
 noremap <left> :bp<CR>
 noremap <right> :bn<CR>
@@ -252,9 +234,11 @@ noremap <leader>AG :action ActivateVersionControlToolWindow<CR>
 " 选中并高亮最后一次插入的内
 nnoremap gv `[v`]
 
-" select block
-nnoremap <leader>v V`}
+" 替换光标下单词的键映射
+nnoremap <Leader>v viw"0p
+vnoremap <Leader>v    "0p
 
 " multiple cursors
 map <A-M>  <A-N>
-set clipboard+=ideaput
+
+nnoremap <silent> <BS> <BS>:nohlsearch<CR>
