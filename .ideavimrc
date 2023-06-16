@@ -1,244 +1,163 @@
-" M->cmd, A->option, C->control
-" <ESC> - escape, <BS> - backspace, <CR> - return
+let mapleader=" "
 
-" leader
-let mapleader = " "
-set easymotion
-set NERDTree
-set highlightedyank
-" 启用vim surround功能
+""" Plugins  --------------------------------
 set surround
-" 启用multi cursor
 set multiple-cursors
-" enable which-key
-set which-key
-" notimeout
-set notimeout
-" 设置当前行下划线
-set cursorline
-" 显示行号
-set nu
-" 显示相对行 set rnu
-" 高亮搜索
-set hlsearch
-" 自动定位到输入中的字符串，不需要回车搜索
+set commentary
+set argtextobj
+set easymotion
+set textobj-entire
+set ReplaceWithRegister
+set exchange
+set NERDTree
+" Trying the new syntax
+Plug 'machakann/vim-highlightedyank'
+
+""" Plugin settings -------------------------
+let g:argtextobj_pairs="[:],(:),<:>"
+
+" <C-n> seems to me as a better solution than <M-n>,
+" but we should finally support vim-visual-multi because vim-multiple-cursors is deprecated now
+" map <C-n> <Plu>NextWholeOccurrence
+
+
+""" Common settings -------------------------
+set showmo
+set so=5
 set incsearch
-" 显示当前的模式
-set showmode
-" 共享系统粘贴板
+set nu
 set clipboard=unnamed
 set clipboard+=ideaput
-" 搜索时智能匹配大小写
 set ignorecase smartcase
-" 复制后高亮的实效时间
-let g:highlightedyank_highlight_duration = "50"
-" 复制后高亮的颜色
-let g:highlightedyank_highlight_color = "rgba(160, 160, 160, 155)"
-" Insert
-inoremap jj <Esc>
-" Normal
-nnoremap dd ddzz
-" Visual
-vnoremap d dzz
+set hlsearch
+set relativenumber
 
-noremap s ""
-" E和R是为了保持与Chrome中的SurfingKeys的键位一致
-noremap E gT
-" noremap R gt
-noremap J <ESC>:action EditorJoinLines<CR>
-""" Tool windows
-nnoremap <c-t> :action ActivateTerminalToolWindow<CR>
-" 个人习惯
-noremap <leader>` <ESC>:action SelectInProjectView<CR>
+" Idea specific settings ------------------
+set ideastatusicon=gray
+set ideamarks
 
-" Leader key relevant
-" quit
-noremap <leader>q :wq<CR>
-" write to favorite
-noremap <leader>w <ESC>:action AddToFavoritesPopup<CR>
-" error description
-noremap <leader>e <ESC>:action ShowErrorDescription<CR>
-" return
-noremap <leader>r <ESC>:action Run<CR>
-" Windows或者MacOS的快捷键都与t相关, 所以选择t作为键
-" noremap <leader>t <ESC>:action Refactorings.QuickListPopupAction<CR>
-" y
-"noremap <leader>y <ESC>:action <CR>
-" usage
-noremap <leader>u <ESC>:action ShowUsages<CR>
-" import
-" noremap <leader>i <ESC>:action Maven.Reimport<CR>
-" open file path
+" Keys from vim-gitgutter
+nmap ]c <Action>(VcsShowNextChangeMarker)
+nmap [c <Action>(VcsShowPrevChangeMarker)
+" Not from vim-gitgutter. ={motion} is for indenting. =c does nothing
+nmap =c <Action>(VcsShowCurrentChangeMarker)
+
+""" My Mappings -----------------------------
+map <leader>f <Plug>(easymotion-s)
+map <leader>e <Plug>(easymotion-f)
+
+map <leader>d <Action>(Debug)
+map <leader>r <Action>(RenameElement)
+map <leader>c <Action>(Stop)
+map <leader>z <Action>(ToggleDistractionFreeMode)
+
+nmap <leader>ss <Action>(ShowUsages)
+map <leader>a <Action>(Annotate)
+nmap <leader>h <Action>(HighlightUsagesInFile)
+nmap <leader>n <Action>(ReSharperNavigateTo)
+map <leader>j <ESC>:action GotoNextError<CR>
+map <leader>k <ESC>:action GotoPreviousError<CR>
+
+" Reformat the current line only
+map <leader>l V<Action>(ReformatCode)
+
+map <leader>bb <Action>(ToggleLineBreakpoint)
+map <leader>sp <Action>(FileStructurePopup)
+noremap <leader>t <ESC>:action Refactorings.QuickListPopupAction<CR>
+noremap <leader>u <ESC>:action FindUsages<CR>
 noremap <leader>o <ESC>:action ShowFilePath<CR>
-" show projects
-noremap <leader>p <ESC>:action ManageRecentProjects<CR>
+nmap <leader>v <Action>(Vcs.QuickListPopupAction)
+nmap <leader>x <Action>(HideAllWindows)
+noremap <leader>gg <ESC>:action Generate<CR>
 
-" ace jump
-noremap <leader>a <ESC>:action emacsIDEAs.AceJumpWord<CR>
-" structure
-noremap <leader>sp <ESC>:action FileStructurePopup<CR>
-" debug option
-noremap <leader>cd <ESC>:action ChooseDebugConfiguration<CR>
-" 同样也是debug，因为d已经被ChooseDebugConfiguration占领, 所以就放在了d键隔壁.
-noremap <leader>d <ESC>:action DebugClass<CR>
-" g
-noremap <leader>g <ESC>:action Generate<CR>
-" hide all
-noremap <leader>h <ESC>:action HideAllWindows<CR>
-noremap <leader>th <ESC>:action TypeHierarchy<CR>
-" jump to next error
-noremap <leader>j <ESC>:action GotoNextError<CR>
-" jump to previous error，就近原则
-noremap <leader>k <ESC>:action GotoPreviousError<CR>
-" light up
-noremap <leader>l <ESC>:action HighlightUsagesInFile<CR>
-" 粘贴最近复制寄存器
-noremap <leader>; "0p
+" CamelCaseMotion approximation (obsolete with proper CamelCaseMotoin plugin)
+" Missing inner word motions e.g. i<leader>w
+nmap <leader>w [w
+nmap <leader>b [b
+nmap <leader>e ]w
+nmap <leader>ge ]b
 
-" 重构相关
-" rename element - change name
-noremap <leader>cn <ESC>:action RenameElement<CR>
-nnoremap <Leader>cm :action ImplementMethods<CR>
-nnoremap <Leader>cv :action IntroduceVariable<CR>
-nnoremap <Leader>em :action ExtractMethod<CR>
-nnoremap <Leader>cw :action SurroundWith<CR>
-nnoremap <Leader>cc :action CommentByLineComment<CR>
-vnoremap <Leader>cc :action CommentByBlockComment<CR>
-vnoremap <Leader>em :action ExtractMethod<CR>
-vnoremap <Leader>cw :action SurroundWith<CR>
+map <leader>J Ji <ESC>
+" Just makes me nervous
+map H h
 
-" 本行皆为debug所用
-" resume - z
-noremap <leader>z <ESC>:action Resume<CR>
-" step over
-noremap <leader>x <ESC>:action StepOver<CR>
-" step into
-noremap <leader>i <ESC>:action SmartStepInto<CR>
-" evaluate expression - v
-noremap <leader>v <ESC>:action EvaluateExpression<CR>
-" breakpoints
-noremap <leader>b <ESC>:action ViewBreakpoints<CR>
-" 因为属于breakpoint范畴的功能, 所以就选择了b和m的隔壁
-noremap <leader>n <ESC>:action ToggleLineBreakpoint<CR>
-nnoremap <leader>t :action ActivateRunToolWindow<CR>
-" mute breakpoints
-noremap <leader>m <ESC>:action XDebugger.MuteBreakpoints<CR>
+" Toggle case and start typing. E.g. `<leader>iget`: `property` -> `getProperty`
+map <leader>i ~hi
+" Remove selection and toggle case. E.g. `v2l<leader>u`: `Property` -> `property`
+vmap <leader>u d~h
 
-" g key relevant
-"
-" q
-"noremap gq <ESC>:action <CR>
-" switcher
+" I think it's a better solution
+map U <C-R>
+inoremap jj <ESC>
+nnoremap <silent> <BS> <BS>:nohlsearch<CR>
+
+"self mapper
+nnoremap <c-t> :action ActivateTerminalToolWindow<CR>
+noremap <leader>` <ESC>:action SelectInProjectView<CR>
+map <Leader>sa ggVG
+" 选中并高亮最后一次插入的内
+map <A-M>  <A-N>
+
 noremap gw <ESC>:action RecentFiles<CR>
-" e
-"noremap ge <ESC>:action <CR>
-" r
-"noremap gr <ESC>:action <CR>
-" translator(third party plugin)
-noremap gt <ESC>:action $EditorTranslateAction<CR>
-" y
-noremap gy <ESC>:action CopyReference<CR>
-" u
-"noremap gu <ESC>:action <CR>
-" intention
+nmap gl <Action>(QuickJavaDoc)
+nmap gL <Action>(QuickImplementations)
+nmap gy <Action>(ShowErrorDescription)
 noremap gi <ESC>:action ShowIntentionActions<CR>
-" o
-"noremap go <ESC>:action <CR>
-" param info
 noremap gp <ESC>:action ParameterInfo<CR>
-
-" a
-"noremap ga <ESC>:action <CR>
-" goto implementation
 noremap gti <ESC>:action GotoImplementation<CR>
-" goto GotoSuperMethod
 noremap gts <ESC>:action GotoSuperMethod<CR>
-" goto declaration
 noremap gtd <ESC>:action GotoDeclaration<CR>
-" goto file
 noremap gtf <ESC>:action GotoFile<CR>
 nnoremap gt :action GotoTest<CR>
 nnoremap gb :action Back<CR>
 nnoremap gf :action Forward<CR>
-" g
-"noremap gg <ESC>:action MUST_NOT_BE_CHANGED!!!<CR>
-" hierarchy
 noremap ghc <ESC>:action CallHierarchy<CR>
 noremap ght <ESC>:action TypeHierarchy<CR>
 noremap ghm <ESC>:action MethodHierarchy<CR>
-" j analyze data flow in
 noremap gj <ESC>:action SliceBackward<CR>
-" k analyze data flow out
 noremap gk <ESC>:action SliceForward<CR>
-" l
-"noremap gl <ESC>:action <CR>
-
-" z
-"noremap gz <ESC>:action <CR>
-" close all but this
-" noremap gx <ESC>:action CloseAllEditorsButActive<CR>
-" compile
-" noremap gc <ESC>:action CompileDirty<CR>
-" v
-"noremap gv <ESC>:action <CR>
-" b
-" noremap gb <ESC>:action FindBugs.CurrentFileAction<CR>
-" goto class
+noremap gx <ESC>:action CloseAllEditorsButActive<CR>
 noremap gn <ESC>:action GotoClass<CR>
-" goto method
 noremap gm <ESC>:action GotoSymbol<CR>
-
-" NERDTree
-noremap <leader>nt <ESC>:NERDTree<CR>
-
-
-" \ also works
-"noremap \q <ESC>:action <CR>
-" refresh
-" uml popup
-noremap \u <ESC>:action ShowUmlDiagramPopup<CR>
-
-" global find
 noremap g/ <ESC>:action FindInPath<CR>
-" gloaal replace
 noremap g' <ESC>:action ReplaceInPath<CR>
-" find
-" noremap / <ESC>:action Find<CR>
-" replace
-" noremap ' <ESC>:action Replace<CR>
-" previous method
 noremap [[ <ESC>:action MethodUp<CR>
-" next method
 noremap ]] <ESC>:action MethodDown<CR>
-" 代码折叠自定义快捷键
 nnoremap zC :action CollapseRegionRecursively<CR>
 nnoremap zO :action ExpandRegionRecursively<CR>
 
+"--  Method text objects operation replacement
+nnoremap vam j:action MethodUp<cr>0v]M
+" nnoremap vim j:action MethodUp<cr>]m<cr>v]M<bs>
+nnoremap dam j:action MethodUp<cr>0v]M"_d
+" nnoremap dim j:action MethodUp<cr>]m<cr>v]M<bs>"_d
+nnoremap yam j:action MethodUp<cr>0v]My
+" nnoremap yim j:action MethodUp<cr>]m<cr>v]M<bs>y
+nnoremap cam j:action MethodUp<cr>0v]M"_c
+" nnoremap cim j:action MethodUp<cr>]m<cr>v]M<bs>"_c
 
-"""  from k-vim ""
-" 切换前后buffer
-nnoremap [b :bprevious<cr>
-nnoremap ]b  :bnext<cr>
-" 使用方向键切换buffer
-noremap <left> :bp<CR>
-noremap <right> :bn<CR>
-map <leader>tn :tabnext<cr>
-map <leader>tp :tabprev<cr>
-" remap U to <C-r> for easier redo
-nnoremap U <C-r>
-" select all
-map <Leader>sa ggVG
-"激活git的窗口
-noremap <leader>AG :action ActivateVersionControlToolWindow<CR>
+function! Invert(calledFromVisual)
+  let antonyms = ['true', 'false', 'after', 'before', 'start', 'end', 'left', 'right', 'first', 'last', \
+                  'True', 'False', 'After', 'Before', 'Start', 'End', 'Left', 'Right', 'First', 'Last']
 
-" 选中并高亮最后一次插入的内
-nnoremap gv `[v`]
+  if a:calledFromVisual
+    normal gv"wy
+  else
+    normal "wyiw
+  endif
+  let wordUnderCaret = @w
 
-" 替换光标下单词的键映射
-nnoremap <Leader>v viw"0p
-vnoremap <Leader>v    "0p
+  let eraseWord = a:calledFromVisual ? 'gvc' : 'ciw'
+  let count = 0
+  while (count < len(antonyms))
+    if (antonyms[count] ==# wordUnderCaret)
+      let antonym = (count % 2 ==? 0) ? antonyms[count + 1] : antonyms[count - 1]
+      execute 'normal ' .. eraseWord .. antonym
+      break
+    endif
+    let count += 1
+  endwhile
+endfunction
 
-" multiple cursors
-map <A-M>  <A-N>
-
-nnoremap <silent> <BS> <BS>:nohlsearch<CR>
+nnoremap ! :call Invert(0)<CR>
+vnoremap ! :<C-u>call Invert(1)<CR>
